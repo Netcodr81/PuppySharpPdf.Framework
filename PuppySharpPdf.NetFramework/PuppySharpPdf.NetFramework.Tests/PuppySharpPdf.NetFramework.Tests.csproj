@@ -22,4 +22,14 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PuppySharpPdf.NetFramework\PuppySharpPdf.NetFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\css\TestCss.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
