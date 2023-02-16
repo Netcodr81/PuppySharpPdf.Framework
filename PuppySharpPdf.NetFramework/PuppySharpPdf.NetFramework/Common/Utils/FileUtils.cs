@@ -1,5 +1,4 @@
-﻿using PuppySharpPdf.NetFramework.Common.Interfaces.FileUtils;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -7,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace PuppySharpPdf.NetFramework.Common.Utils;
 
 
-internal class FileUtils : IFileUtils
+internal class FileUtils
 {
     public string RenderCssContentFromFileToString(string pathToCssFile)
     {
