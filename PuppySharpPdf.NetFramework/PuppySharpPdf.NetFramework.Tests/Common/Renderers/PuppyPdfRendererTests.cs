@@ -39,4 +39,33 @@ public class PuppyPdfRendererTests
         renderer.RendererOptions.Env.ShouldBe(new Dictionary<string, string>());
         renderer.RendererOptions.Args.ShouldBe(Array.Empty<string>());
     }
+
+    [Fact]
+    public async Task GeneratePdfFromUrlAsync_DefaultRendererWithProtocol_ShouldReturnNonEmptyByteArray()
+    {
+
+        // arrange
+        var renderer = new PuppyPdfRenderer();
+
+        // act
+        var result = await renderer.GeneratePdfFromUrlAsync("https://www.google.com");
+
+        // assert
+        result.ShouldNotBeEmpty();
+    }
+
+
+    [Fact]
+    public async Task GeneratePdfFromUrlAsync_DefaultRendererWithNoProtocol_ShouldReturnNonEmptyByteArray()
+    {
+
+        // arrange
+        var renderer = new PuppyPdfRenderer();
+
+        // act
+        var result = await renderer.GeneratePdfFromUrlAsync("www.google.com");
+
+        // assert
+        result.ShouldNotBeEmpty();
+    }
 }
