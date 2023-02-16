@@ -7,7 +7,7 @@ using System.Web.Mvc;
 namespace PuppySharpPdf.NetFramework.Common.Utils;
 public static class ImageUtils
 {
-    public static string RenderImgToBase64(this UrlHelper urlHelper, string url)
+    public static string RenderImage(this UrlHelper urlHelper, string url)
     {
         string finalUrl = "";
 
