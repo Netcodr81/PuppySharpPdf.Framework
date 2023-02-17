@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>PuppySharpPDF PDF Generation Library Demo</h1>
+    <p class="lead">PuppySharpPDF wraps the PuppeteerSharp package into an easy to use API and allows you to generate a PDF from a URL or HTML/Razor file</p>
+    
+</div>
+
+<div class="row flex justify-content-center">
+    @Html.ActionLink("Generate PDF Using Url", "GeneratePdfByUrl", "Home", null, new {@class="btn btn-primary mr-3"})
+    @Html.ActionLink("Generate PDF Using Html/Razor", "GeneratePdfUsingHtml", "Home", null, new {@class="btn btn-primary"})
+</div>

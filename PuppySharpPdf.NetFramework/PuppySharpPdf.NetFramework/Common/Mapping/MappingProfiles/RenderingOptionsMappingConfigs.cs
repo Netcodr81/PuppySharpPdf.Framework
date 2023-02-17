@@ -7,6 +7,9 @@ public class RenderingOptionsMappingConfigs : Profile
 {
     public RenderingOptionsMappingConfigs()
     {
-        CreateMap<RendererOptions, LaunchOptions>();
+        CreateMap<RendererOptions, LaunchOptions>()
+            .ForMember(dest => dest.ExecutablePath, opt => opt.MapFrom(src => src.ChromeExecutablePath));
+
+
     }
 }
