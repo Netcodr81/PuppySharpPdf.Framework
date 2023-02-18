@@ -1,5 +1,6 @@
 ﻿using PuppeteerSharp.Media;
 using PuppySharpPdf.NetFramework.Common;
+using PuppySharpPdf.NetFramework.Tests.Resources;
 using Shouldly;
 
 namespace PuppySharpPdf.NetFramework.Tests.Common.RendererTests;
@@ -86,5 +87,22 @@ public class PuppyPdfRendererTests
 
         // assert
         result.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task GeneratePdfFromHtml_NoCustomOptions_ShouldReturnNonEmptyByteArray()
+    {
+
+        // arrange
+        var html = DummyHtmlGenerator.GenerateSimpleHtmlString();
+        var renderer = new PuppyPdfRenderer();
+
+        // act
+        var result = await renderer.GeneratePdfFromHtmlAsync(html);
+
+        // assert
+
+        result.ShouldNotBeEmpty();
+
     }
 }

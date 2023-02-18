@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using PuppySharpPdf.NetFramework.Common.Mapping;
 using PuppySharpPdf.NetFramework.Common.Renderers.Configurations;
 using System;
@@ -39,14 +40,20 @@ public class PuppyPdfRenderer
             url = $"https://{url}";
         }
 
-        var browserFetcher = new BrowserFetcher();
-        await browserFetcher.DownloadAsync();
+        if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+        }
+
         var options = _mapper.Map<LaunchOptions>(RendererOptions);
         await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
         await using var page = await browser.NewPageAsync();
         await page.GoToAsync(url);
 
+
         var result = await page.PdfDataAsync();
+        await page.CloseAsync();
 
         return result;
     }
@@ -67,8 +74,12 @@ public class PuppyPdfRenderer
         var customPdfOptions = new Renderers.Configurations.PdfOptions();
         pdfOptions?.Invoke(customPdfOptions);
 
-        var browserFetcher = new BrowserFetcher();
-        await browserFetcher.DownloadAsync();
+        if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+        }
+
         var options = _mapper.Map<LaunchOptions>(RendererOptions);
         await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
         await using var page = await browser.NewPageAsync();
@@ -76,6 +87,35 @@ public class PuppyPdfRenderer
 
         var result = await page.PdfDataAsync(customPdfOptions.MappedPdfOptions);
 
+        await page.CloseAsync();
+
         return result;
+    }
+
+    public async Task<byte[]> GeneratePdfFromHtmlAsync(string html)
+    {
+        if (html is null)
+        {
+            throw new ArgumentNullException(nameof(html));
+        }
+
+        if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+        }
+
+        await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
+
+        using var page = await browser.NewPageAsync();
+        await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+        await page.SetContentAsync(html);
+
+        var result = await page.PdfDataAsync(new Renderers.Configurations.PdfOptions().MappedPdfOptions);
+        await page.CloseAsync();
+
+        return result;
+
     }
 }
