@@ -14,7 +14,7 @@ internal class FileUtils
         string directoryPath = Path.GetDirectoryName(assemblyPath);
 
 
-        var css = System.IO.File.ReadAllText(pathToCssFile);
+        var css = System.IO.File.ReadAllText(Path.Combine(directoryPath, pathToCssFile.Replace("~", string.Empty)));
         return css;
     }
 }

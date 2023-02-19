@@ -185,6 +185,7 @@
     <Compile Include="Common\Renderers\Configurations\RendererOptions.cs" />
     <Compile Include="Common\Renderers\PuppyPdfRenderer.cs" />
     <Compile Include="Common\Utils\FileUtils.cs" />
+    <Compile Include="Common\Utils\HtmlUtils.cs" />
     <Compile Include="Common\Utils\ImageUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
