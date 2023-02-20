@@ -1,6 +1,4 @@
-﻿using PuppeteerSharp.Media;
-
-namespace PuppySharpPdf.NetFramework.Common.Renderers.Configurations;
+﻿namespace PuppySharpPdf.NetFramework.Common.Renderers.Configurations;
 public class PdfOptions
 {
     /// <summary>
@@ -86,7 +84,7 @@ public class PdfOptions
             return new PuppeteerSharp.PdfOptions
             {
                 PrintBackground = this.PrintBackground,
-                Format = this.Format,
+                Format = new PuppeteerSharp.Media.PaperFormat(this.Format.Width, this.Format.Height),
                 Scale = this.Scale,
                 DisplayHeaderFooter = this.DisplayHeaderFooter,
                 FooterTemplate = this.FooterTemplate,
@@ -94,7 +92,7 @@ public class PdfOptions
                 PageRanges = this.PageRanges,
                 Width = this.Width,
                 Height = this.Height,
-                MarginOptions = this.MarginOptions,
+                MarginOptions = this.MarginOptions.MappedMarginOptions,
                 PreferCSSPageSize = this.PreferCSSPageSize,
                 OmitBackground = this.OmitBackground,
 

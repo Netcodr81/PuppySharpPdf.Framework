@@ -7,5 +7,6 @@ namespace PuppySharpPdf.NetFramework.DemoProject.Models
         [Required(ErrorMessage = "A url is required")]
         public string Url { get; set; }
         public bool UseLocalExe { get; set; }
+        public PdfOptionsViewModel PdfOptions { get; set; }
     }
 }

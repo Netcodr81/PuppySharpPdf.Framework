@@ -161,7 +161,7 @@
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
@@ -181,6 +181,8 @@
   <ItemGroup>
     <Compile Include="Common\Mapping\MapperConfig.cs" />
     <Compile Include="Common\Mapping\MappingProfiles\RenderingOptionsMappingConfigs.cs" />
+    <Compile Include="Common\Renderers\Configurations\MarginOptions.cs" />
+    <Compile Include="Common\Renderers\Configurations\PaperFormat.cs" />
     <Compile Include="Common\Renderers\Configurations\PdfOptions.cs" />
     <Compile Include="Common\Renderers\Configurations\RendererOptions.cs" />
     <Compile Include="Common\Renderers\PuppyPdfRenderer.cs" />

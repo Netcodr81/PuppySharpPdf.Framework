@@ -46,6 +46,68 @@ namespace PuppySharpPdf.NetFramework.DemoProject.Controllers
             return File(result, "application/pdf", "PdfFromUrl.pdf");
         }
 
+        public ActionResult GeneratePdfByUrlWithCustomOptions()
+        {
+            return View(new PdfGenerationByUrlRequest() { PdfOptions = new PdfOptionsViewModel() });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GeneratePdfByUrlWithCustomOptions(PdfGenerationByUrlRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.UseLocalExe)
+            {
+                var pdfRendererLocal = new PuppyPdfRenderer(options =>
+                {
+                    options.ChromeExecutablePath = Server.MapPath("~/Content/ChromeBrowser/chrome-win/chrome.exe");
+
+                });
+
+                var resultLocal = await pdfRendererLocal.GeneratePdfFromUrlAsync(request.Url, options =>
+                {
+                    options.PrintBackground = request.PdfOptions.PrintBackground;
+                    options.Format = request.PdfOptions.GetPaperFormatType();
+                    options.Scale = request.PdfOptions.Scale;
+                    options.DisplayHeaderFooter = request.PdfOptions.DisplayHeaderFooter;
+                    options.HeaderTemplate = request.PdfOptions.HeaderTemplate;
+                    options.FooterTemplate = request.PdfOptions.FooterTemplate;
+                    options.Landscape = request.PdfOptions.Landscape;
+                    options.PageRanges = request.PdfOptions.PageRanges;
+                    options.Width = request.PdfOptions.Width;
+                    options.Height = request.PdfOptions.Height;
+                    options.MarginOptions = request.PdfOptions.MarginOptions;
+                    options.PreferCSSPageSize = request.PdfOptions.PreferCSSPageSize;
+                    options.OmitBackground = request.PdfOptions.OmitBackground;
+                });
+
+                return File(resultLocal, "application/pdf", "PdfFromUrlWithCustomOptions.pdf");
+            }
+
+            var pdfRenderer = new PuppyPdfRenderer();
+            var result = await pdfRenderer.GeneratePdfFromUrlAsync(request.Url, options =>
+            {
+                options.PrintBackground = request.PdfOptions.PrintBackground;
+                options.Format = request.PdfOptions.GetPaperFormatType();
+                options.Scale = request.PdfOptions.Scale;
+                options.DisplayHeaderFooter = request.PdfOptions.DisplayHeaderFooter;
+                options.HeaderTemplate = request.PdfOptions.HeaderTemplate;
+                options.FooterTemplate = request.PdfOptions.FooterTemplate;
+                options.Landscape = request.PdfOptions.Landscape;
+                options.PageRanges = request.PdfOptions.PageRanges;
+                options.Width = request.PdfOptions.Width;
+                options.Height = request.PdfOptions.Height;
+                options.MarginOptions = request.PdfOptions.MarginOptions;
+                options.PreferCSSPageSize = request.PdfOptions.PreferCSSPageSize;
+                options.OmitBackground = request.PdfOptions.OmitBackground;
+            });
+
+            return File(result, "application/pdf", "PdfFromUrlWithCustomOptions.pdf");
+        }
+
         public ActionResult GeneratePdfUsingHtml()
         {
             ViewBag.Message = "Your contact page.";

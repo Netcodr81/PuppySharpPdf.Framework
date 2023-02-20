@@ -2,7 +2,7 @@
 using PuppySharpPdf.NetFramework.Tests.Resources;
 using Shouldly;
 
-namespace PuppySharpPdf.NetFramework.Tests.Common.Utils;
+namespace PuppySharpPdf.NetFramework.Tests.Common.UtilTests;
 public class HtmlUtilsTests
 {
 
@@ -54,6 +54,37 @@ public class HtmlUtilsTests
 
         result.ShouldNotBeEmpty();
         result.ShouldBeOfType<string>();
+
+    }
+
+    [Fact]
+    public void NormalizeHtmlString_ConvertsAllImageTagsToBase64()
+    {
+
+        // arrange
+        var html = DummyHtmlGenerator.GenerateHtmlStringWithThreeImageTags();
+        var expected = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "Resources\\html\\NormalizedImageTags.html");
+
+        // act
+        var results = HtmlUtils.NormalizeHtmlString(html);
+
+        // assert
+        results.ShouldBe(expected);
+    }
+
+    [Fact]
+    public void FindCssTagSources_ShouldFindThreeTagSources()
+    {
+
+        // arrange
+        var html = DummyHtmlGenerator.GenerateHtmlStringWithThreeCssTags();
+
+        // act
+        var results = HtmlUtils.FindCssTagSources(html);
+
+        // assert
+        results.Count().ShouldBe(3);
+
 
     }
 }

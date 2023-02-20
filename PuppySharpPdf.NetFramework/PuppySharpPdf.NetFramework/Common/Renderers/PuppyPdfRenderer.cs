@@ -3,6 +3,7 @@ using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using PuppySharpPdf.NetFramework.Common.Mapping;
 using PuppySharpPdf.NetFramework.Common.Renderers.Configurations;
+using PuppySharpPdf.NetFramework.Common.Utils;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -108,11 +109,87 @@ public class PuppyPdfRenderer
         await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
 
         using var page = await browser.NewPageAsync();
+        await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
         await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+        html = HtmlUtils.NormalizeHtmlString(html);
 
         await page.SetContentAsync(html);
 
+        await page.ImportCssStyles(html);
+
         var result = await page.PdfDataAsync(new Renderers.Configurations.PdfOptions().MappedPdfOptions);
+
+        await page.CloseAsync();
+
+        return result;
+
+    }
+
+    public async Task<byte[]> GeneratePdfFromHtmlAsync(string html, Action<Renderers.Configurations.PdfOptions> options)
+    {
+        if (html is null)
+        {
+            throw new ArgumentNullException(nameof(html));
+        }
+
+        if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+        }
+
+        var pdfOptions = new Renderers.Configurations.PdfOptions();
+        options?.Invoke(pdfOptions);
+
+        await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
+
+        using var page = await browser.NewPageAsync();
+        await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
+        await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+        html = HtmlUtils.NormalizeHtmlString(html);
+
+        await page.SetContentAsync(html);
+
+        await page.ImportCssStyles(html);
+
+        var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
+
+        await page.CloseAsync();
+
+        return result;
+
+    }
+
+    public async Task<byte[]> GeneratePdfFromHtmlAsync(string html, Renderers.Configurations.PdfOptions pdfOptions)
+    {
+        if (html is null)
+        {
+            throw new ArgumentNullException(nameof(html));
+        }
+
+        if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+        }
+
+
+        await using var browser = await Puppeteer.LaunchAsync(options: _mapper.Map<LaunchOptions>(RendererOptions));
+
+        using var page = await browser.NewPageAsync();
+        await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
+        await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+        html = HtmlUtils.NormalizeHtmlString(html);
+
+        await page.SetContentAsync(html);
+
+        await page.ImportCssStyles(html);
+
+        var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
+
         await page.CloseAsync();
 
         return result;
