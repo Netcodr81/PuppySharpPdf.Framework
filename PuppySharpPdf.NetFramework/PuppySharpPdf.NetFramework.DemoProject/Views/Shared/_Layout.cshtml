@@ -30,7 +30,8 @@
                         Pdf Generation From Html
                     </a>
                     <div class="dropdown-menu">
-                        @Html.ActionLink("Generate PDF Using Html", "GeneratePdfUsingHtml", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html/Razor", "GeneratePdfUsingHtml", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html/Razor With Custom Options", "GeneratePdfUsingHtmlWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
                     </div>
                 </li>
             </ul>

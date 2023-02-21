@@ -2,6 +2,7 @@
 using PuppySharpPdf.NetFramework.DemoProject.Models;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Westwind.Web.Mvc;
 
 namespace PuppySharpPdf.NetFramework.DemoProject.Controllers
 {
@@ -108,10 +109,45 @@ namespace PuppySharpPdf.NetFramework.DemoProject.Controllers
             return File(result, "application/pdf", "PdfFromUrlWithCustomOptions.pdf");
         }
 
+
         public ActionResult GeneratePdfUsingHtml()
         {
-            ViewBag.Message = "Your contact page.";
 
+
+            return View(new DemoTemplateViewModel());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GeneratePdfUsingHtml(DemoTemplateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var html = ViewRenderer.RenderPartialView("~/Views/Shared/Templates/Demo.cshtml", model);
+
+            if (model.UseLocalExe)
+            {
+                var pdfRendererLocal = new PuppyPdfRenderer(options =>
+                {
+                    options.ChromeExecutablePath = Server.MapPath("~/Content/ChromeBrowser/chrome-win/chrome.exe");
+
+                });
+
+                var resultLocal = await pdfRendererLocal.GeneratePdfFromHtmlAsync(html);
+
+                return File(resultLocal, "application/pdf", "PdfFromUrl.pdf");
+            }
+
+            var pdfRenderer = new PuppyPdfRenderer();
+            var result = await pdfRenderer.GeneratePdfFromHtmlAsync(html);
+
+            return File(result, "application/pdf", "GeneratedFromHtmlString.pdf");
+        }
+
+        public ActionResult GeneratePdfUsingHtmlWithCustomOptions()
+        {
             return View();
         }
     }

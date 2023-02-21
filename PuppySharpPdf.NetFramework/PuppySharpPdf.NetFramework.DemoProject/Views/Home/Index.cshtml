@@ -9,6 +9,8 @@
 </div>
 
 <div class="row flex justify-content-center">
-    @Html.ActionLink("Generate PDF Using Url", "GeneratePdfByUrl", "Home", null, new {@class="btn btn-primary mr-3"})
-    @Html.ActionLink("Generate PDF Using Html/Razor", "GeneratePdfUsingHtml", "Home", null, new {@class="btn btn-primary"})
+    @Html.ActionLink("Generate PDF Using Url", "GeneratePdfByUrl", "Home", null, new { @class = "btn btn-primary mr-3" })
+    @Html.ActionLink("Generate PDF Using Url With Custom Options", "GeneratePdfByUrlWithCustomOptions", "Home", null, new { @class = "btn btn-primary mr-3" })
+    @Html.ActionLink("Generate PDF Using Html/Razor", "GeneratePdfUsingHtml", "Home", null, new { @class = "btn btn-primary mr-3" })
+    @Html.ActionLink("Generate PDF Using Html/Razor With Custom Options", "GeneratePdfUsingHtmlWithCustomOptions", "Home", null, new { @class = "btn btn-primary" })
 </div>

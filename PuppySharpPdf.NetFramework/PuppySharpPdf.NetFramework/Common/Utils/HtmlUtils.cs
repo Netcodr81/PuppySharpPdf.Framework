@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -61,10 +60,7 @@ internal static class HtmlUtils
                 }
             }
 
-            string assemblyPath = Assembly.GetExecutingAssembly().Location;
-            string directoryPath = Path.GetDirectoryName(assemblyPath);
-
-            var imgFileBytes = File.ReadAllBytes(Path.Combine(directoryPath, imgPath.Replace("~", string.Empty)));
+            var imgFileBytes = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + imgPath.Replace("~", string.Empty));
             return $"data:image/{Path.GetExtension(imgPath).Substring(1)};base64,{Convert.ToBase64String(imgFileBytes)}";
         }
         catch (Exception)
@@ -101,7 +97,7 @@ internal static class HtmlUtils
 
         foreach (var path in cssPathTags)
         {
-            if (!Regex.IsMatch(path, @"http?://"))
+            if (!Regex.IsMatch(path, @"https?://"))
             {
                 var css = System.IO.File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}{path.Replace("~", string.Empty)}");
                 await page.AddStyleTagAsync(new AddTagOptions() { Content = css });
