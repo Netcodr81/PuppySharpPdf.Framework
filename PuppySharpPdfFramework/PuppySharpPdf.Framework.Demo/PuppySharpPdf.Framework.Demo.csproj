@@ -339,6 +339,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
+    <Content Include="Views\Shared\Templates\Demo.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
