@@ -1,198 +1,292 @@
-﻿using PuppeteerSharp;
+﻿using Ardalis.Result;
+using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using PuppySharpPdf.Framework.Common.Mapping;
 using PuppySharpPdf.Framework.Renderers.Configurations;
 using PuppySharpPdf.Framework.Utils;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PuppySharpPdf.Framework.Renderers
 {
-    public class PuppyPdfRenderer
-    {
-        public RendererOptions RendererOptions { get; }
+	public class PuppyPdfRenderer
+	{
+		public RendererOptions RendererOptions { get; }
 
-        public PuppyPdfRenderer()
-        {
+		public PuppyPdfRenderer()
+		{
 
-            RendererOptions = new RendererOptions();
-        }
-        public PuppyPdfRenderer(Action<RendererOptions> options)
-        {
+			RendererOptions = new RendererOptions();
+		}
+		public PuppyPdfRenderer(Action<RendererOptions> options)
+		{
 
-            var rendererOptions = new RendererOptions();
-            options?.Invoke(rendererOptions); ;
+			var rendererOptions = new RendererOptions();
+			options?.Invoke(rendererOptions); ;
 
-            RendererOptions = rendererOptions;
-        }
+			RendererOptions = rendererOptions;
+		}
 
-        public async Task<byte[]> GeneratePdfFromUrlAsync(string url)
-        {
-            if (url is null)
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+		public async Task<Result<byte[]>> GeneratePdfFromUrlAsync(string url)
+		{
+			if (url is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Url can't be empty", ErrorCode = "400" } });
+			}
 
-            var urlValidator = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
-            if (!urlValidator.IsMatch(url))
-            {
-                url = $"https://{url}";
-            }
+			var urlValidator = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
+			if (!urlValidator.IsMatch(url))
+			{
+				url = $"https://{url}";
+			}
 
-            if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
-            {
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-            }
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+			await using var page = await browser.NewPageAsync();
 
+			try
+			{
+				await page.GoToAsync(url);
+				var result = await page.PdfDataAsync();
+				return Result.Success(result);
 
-            await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
-            await using var page = await browser.NewPageAsync();
-            await page.GoToAsync(url);
+			}
+			catch (Exception ex)
+			{
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
 
+		}
 
-            var result = await page.PdfDataAsync();
-            await page.CloseAsync();
+		public async Task<Result<byte[]>> GeneratePdfFromUrlAsync(string url, Action<Framework.Renderers.Configurations.PdfOptions> pdfOptions)
+		{
+			if (url is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Url can't be empty", ErrorCode = "400" } });
+			}
 
-            return result;
-        }
+			var urlValidator = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
+			if (!urlValidator.IsMatch(url))
+			{
+				url = $"https://{url}";
+			}
 
-        public async Task<byte[]> GeneratePdfFromUrlAsync(string url, Action<Framework.Renderers.Configurations.PdfOptions> pdfOptions)
-        {
-            if (url is null)
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+			var customPdfOptions = new Framework.Renderers.Configurations.PdfOptions();
+			pdfOptions?.Invoke(customPdfOptions);
 
-            var urlValidator = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
-            if (!urlValidator.IsMatch(url))
-            {
-                url = $"https://{url}";
-            }
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
 
-            var customPdfOptions = new Framework.Renderers.Configurations.PdfOptions();
-            pdfOptions?.Invoke(customPdfOptions);
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+			await using var page = await browser.NewPageAsync();
 
-            if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
-            {
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-            }
+			try
+			{
 
+				await page.GoToAsync(url);
 
-            await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
-            await using var page = await browser.NewPageAsync();
-            await page.GoToAsync(url);
+				var result = await page.PdfDataAsync(customPdfOptions.MappedPdfOptions);
+				return Result.Success(result);
 
-            var result = await page.PdfDataAsync(customPdfOptions.MappedPdfOptions);
-
-            await page.CloseAsync();
-
-            return result;
-        }
-
-        public async Task<byte[]> GeneratePdfFromHtmlAsync(string html)
-        {
-            if (html is null)
-            {
-                throw new ArgumentNullException(nameof(html));
-            }
-
-            if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
-            {
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-            }
-
-            await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
-
-            using var page = await browser.NewPageAsync();
-            await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-
-            html = HtmlUtils.NormalizeHtmlString(html);
-
-            await page.SetContentAsync(html);
-
-            await page.ImportCssStyles(html);
-
-            var result = await page.PdfDataAsync(new Framework.Renderers.Configurations.PdfOptions().MappedPdfOptions);
-
-            await page.CloseAsync();
-
-            return result;
-
-        }
-
-        public async Task<byte[]> GeneratePdfFromHtmlAsync(string html, Action<Framework.Renderers.Configurations.PdfOptions> options)
-        {
-            if (html is null)
-            {
-                throw new ArgumentNullException(nameof(html));
-            }
-
-            if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
-            {
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-            }
-
-            var pdfOptions = new Framework.Renderers.Configurations.PdfOptions();
-            options?.Invoke(pdfOptions);
-
-            await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
-
-            using var page = await browser.NewPageAsync();
-            await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-
-            html = HtmlUtils.NormalizeHtmlString(html);
-
-            await page.SetContentAsync(html);
-
-            await page.ImportCssStyles(html);
-
-            var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
-
-            await page.CloseAsync();
-
-            return result;
-
-        }
-
-        public async Task<byte[]> GeneratePdfFromHtmlAsync(string html, Framework.Renderers.Configurations.PdfOptions pdfOptions)
-        {
-            if (html is null)
-            {
-                throw new ArgumentNullException(nameof(html));
-            }
-
-            if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
-            {
-                var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-            }
+			}
+			catch (Exception ex)
+			{
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
 
 
-            await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+		}
 
-            using var page = await browser.NewPageAsync();
-            await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
+		public async Task<Result<byte[]>> GeneratePdfFromUrlAsync(string url, Framework.Renderers.Configurations.PdfOptions pdfOptions)
+		{
+			if (url is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Url can't be empty", ErrorCode = "400" } });
+			}
 
-            html = HtmlUtils.NormalizeHtmlString(html);
+			var urlValidator = new Regex("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$");
+			if (!urlValidator.IsMatch(url))
+			{
+				url = $"https://{url}";
+			}
 
-            await page.SetContentAsync(html);
+			var optionss = pdfOptions.MappedPdfOptions;
 
-            await page.ImportCssStyles(html);
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
 
-            var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
 
-            await page.CloseAsync();
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+			await using var page = await browser.NewPageAsync();
 
-            return result;
+			try
+			{
+				await page.GoToAsync(url);
+				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
+				return Result.Success(result);
+			}
+			catch (Exception ex)
+			{
 
-        }
-    }
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
+
+
+
+		}
+
+		public async Task<Result<byte[]>> GeneratePdfFromHtmlAsync(string html)
+		{
+			if (html is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Html string can't be empty", ErrorCode = "400" } });
+			}
+
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
+
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+
+			using var page = await browser.NewPageAsync();
+			await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
+			await page.EmulateMediaTypeAsync(MediaType.Screen);
+			try
+			{
+				html = HtmlUtils.NormalizeHtmlString(html);
+
+				await page.SetContentAsync(html);
+
+				await page.ImportCssStyles(html);
+
+				var result = await page.PdfDataAsync(new Framework.Renderers.Configurations.PdfOptions().MappedPdfOptions);
+				return Result.Success(result);
+			}
+			catch (Exception ex)
+			{
+
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
+
+		}
+
+		public async Task<Result<byte[]>> GeneratePdfFromHtmlAsync(string html, Action<Framework.Renderers.Configurations.PdfOptions> options)
+		{
+			if (html is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Html string can't be empty", ErrorCode = "400" } });
+			}
+
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
+
+			var pdfOptions = new Framework.Renderers.Configurations.PdfOptions();
+			options?.Invoke(pdfOptions);
+
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+
+			using var page = await browser.NewPageAsync();
+			await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
+			await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+			try
+			{
+				html = HtmlUtils.NormalizeHtmlString(html);
+
+				await page.SetContentAsync(html);
+
+				await page.ImportCssStyles(html);
+
+				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
+				return Result.Success(result);
+			}
+			catch (Exception ex)
+			{
+
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
+
+
+		}
+
+		public async Task<Result<byte[]>> GeneratePdfFromHtmlAsync(string html, Framework.Renderers.Configurations.PdfOptions pdfOptions)
+		{
+			if (html is null)
+			{
+				return Result.Invalid(new List<ValidationError> { new ValidationError { ErrorMessage = "Html string can't be empty", ErrorCode = "400" } });
+			}
+
+			if (string.IsNullOrEmpty(RendererOptions.ChromeExecutablePath))
+			{
+				var browserFetcher = new BrowserFetcher();
+				await browserFetcher.DownloadAsync();
+			}
+
+
+			await using var browser = await Puppeteer.LaunchAsync(options: PuppyMapper.MapToLaunchOptions(RendererOptions));
+
+			using var page = await browser.NewPageAsync();
+			await page.AddStyleTagAsync(new AddTagOptions { Content = @"#header, #footer { -webkit-print-color-adjust:exact;padding: 0 !important;height: 100% !important;}" });
+			await page.EmulateMediaTypeAsync(MediaType.Screen);
+
+			try
+			{
+				html = HtmlUtils.NormalizeHtmlString(html);
+
+				await page.SetContentAsync(html);
+
+				await page.ImportCssStyles(html);
+
+				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
+				return Result.Success(result);
+			}
+			catch (Exception ex)
+			{
+
+				return Result.Error("An error occurred while generating the pdf");
+			}
+			finally
+			{
+				await page.CloseAsync();
+			}
+
+		}
+	}
 }

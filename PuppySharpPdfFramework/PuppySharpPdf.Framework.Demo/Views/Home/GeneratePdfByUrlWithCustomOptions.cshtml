@@ -1,5 +1,5 @@
 ﻿@model PuppySharpPdf.Framework.DemoProject.Models.PdfGenerationByUrlRequest
-@using PuppySharpPdf.Framework.Common.Renderers.Configurations
+@using PuppySharpPdf.Framework.Renderers.Configurations
 @{
     ViewBag.Title = "Generate PDF by URL With Custom Options";
 }
@@ -25,7 +25,12 @@
         @Html.ValidationMessageFor(x => x.UseLocalExe, "", new { @class = "text-danger text-bold" })
 
     </div>
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(x => x.DisplayHeaderFooter, new { @class = "form-check-input" })
+        <label class="form-check-label" for="exampleCheck1">Include Header/Footer</label>
+        @Html.ValidationMessageFor(x => x.DisplayHeaderFooter, "", new { @class = "text-danger text-bold" })
 
+    </div>
     <hr />
     <h3>Custom Pdf Options</h3>
 
