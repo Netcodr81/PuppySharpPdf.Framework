@@ -53,6 +53,9 @@ namespace PuppySharpPdf.Framework.Renderers
 			try
 			{
 				await page.GoToAsync(url);
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync();
+
 				var result = await page.PdfDataAsync();
 				return Result.Success(result);
 
@@ -97,6 +100,8 @@ namespace PuppySharpPdf.Framework.Renderers
 			{
 
 				await page.GoToAsync(url);
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync();
 
 				var result = await page.PdfDataAsync(customPdfOptions.MappedPdfOptions);
 				return Result.Success(result);
@@ -142,6 +147,8 @@ namespace PuppySharpPdf.Framework.Renderers
 			try
 			{
 				await page.GoToAsync(url);
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync();
 				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
 				return Result.Success(result);
 			}
@@ -184,7 +191,8 @@ namespace PuppySharpPdf.Framework.Renderers
 				await page.SetContentAsync(html);
 
 				await page.ImportCssStyles(html);
-
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync();
 				var result = await page.PdfDataAsync(new Framework.Renderers.Configurations.PdfOptions().MappedPdfOptions);
 				return Result.Success(result);
 			}
@@ -229,7 +237,8 @@ namespace PuppySharpPdf.Framework.Renderers
 				await page.SetContentAsync(html);
 
 				await page.ImportCssStyles(html);
-
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync();
 				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
 				return Result.Success(result);
 			}
@@ -273,7 +282,8 @@ namespace PuppySharpPdf.Framework.Renderers
 				await page.SetContentAsync(html);
 
 				await page.ImportCssStyles(html);
-
+				await page.SetJavaScriptEnabledAsync(true);
+				await page.WaitForNetworkIdleAsync(new WaitForNetworkIdleOptions() { IdleTime = 1000 });
 				var result = await page.PdfDataAsync(pdfOptions.MappedPdfOptions);
 				return Result.Success(result);
 			}
