@@ -1,3 +1,7 @@
+@model PuppySharpPdf.Framework.DemoProject.Models.CorgiTemplateViewModel
+@{ 
+    var title = Model.PdfType == "CardiganWelshCorgi" ? "Cardigan Welsh Corgi" : "Pembroke Welsh Corgi";
+}
 <style>
     #header, #footer {
         -webkit-print-color-adjust: exact;
@@ -25,9 +29,9 @@
 
 <div class="pdf-header">
     <div>
-        <img src="~/Content/images/vector-image.jpg" width="80" height="80" />
+        <img src="~/Content/images/corgi.png" width="80" height="80" />
     </div>
     <div class="header-title">
-        <p class="mt-3" style="font-weight:bold;font-size:18px;color:white">Demo Html with Header</p>
+        <p class="mt-3" style="font-weight:bold;font-size:18px;color:white">@title</p>
     </div>
 </div>

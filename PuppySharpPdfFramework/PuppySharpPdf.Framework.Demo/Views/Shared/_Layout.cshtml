@@ -30,8 +30,10 @@
                         Pdf Generation From Html
                     </a>
                     <div class="dropdown-menu">
-                        @Html.ActionLink("Generate PDF Using Html/Razor", "GeneratePdfUsingHtml", "Home", null, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Generate PDF Using Html/Razor With Custom Options", "GeneratePdfUsingHtmlWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Razor Template", "GeneratePdfUsingRazorTemplate", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Razor Template & Custom Options", "GeneratePdfUsingRazorTemplateWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html Template", "GeneratePdfUsingHtmlTemplate", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html Template & Custom Options", "GeneratePdfUsingHtmlTemplateWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
                     </div>
                 </li>
             </ul>

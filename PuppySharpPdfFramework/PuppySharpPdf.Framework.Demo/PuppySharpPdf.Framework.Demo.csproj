@@ -135,7 +135,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DemoTemplateViewModel.cs" />
+    <Compile Include="Models\CorgiTemplateViewModel.cs" />
     <Compile Include="Models\PdfOptionsViewModel.cs" />
     <Compile Include="Models\PdfGenerationByUrlRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -163,7 +163,9 @@
     <Content Include="Content\ChromeBrowser\chrome-win\notification_helper.exe" />
     <Content Include="Content\ChromeBrowser\chrome-win\vk_swiftshader.dll" />
     <Content Include="Content\ChromeBrowser\chrome-win\vulkan-1.dll" />
-    <Content Include="Content\images\vector-image.jpg" />
+    <Content Include="Content\images\corgi.png" />
+    <Content Include="Content\images\Pembroke_Welsh_Corgis.jpeg" />
+    <Content Include="Content\images\welsh-corgi-facts-2.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -342,7 +344,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
-    <Content Include="Views\Shared\Templates\Demo.html" />
+    <Content Include="Views\Shared\Templates\PembrokeWelshCorgi.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -355,7 +357,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\GeneratePdfByUrl.cshtml" />
-    <Content Include="Views\Home\GeneratePdfUsingHtml.cshtml" />
+    <Content Include="Views\Home\GeneratePdfUsingRazorTemplate.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -369,9 +371,12 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\GeneratePdfByUrlWithCustomOptions.cshtml" />
     <Content Include="Views\Home\GeneratePdfUsingHtmlWithCustomOptions.cshtml" />
-    <Content Include="Views\Shared\Templates\Demo.cshtml" />
+    <Content Include="Views\Shared\Templates\CardiganWelshCorgi.html" />
     <Content Include="Views\Shared\Templates\Header.cshtml" />
     <Content Include="Views\Shared\Templates\Footer.cshtml" />
+    <Content Include="Views\Home\GeneratePdfUsingHtmlTemplate.cshtml" />
+    <Content Include="Views\Home\GeneratePdfUsingRazorTemplateWithCustomOptions.cshtml" />
+    <Content Include="Views\Shared\Templates\CorgiInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
