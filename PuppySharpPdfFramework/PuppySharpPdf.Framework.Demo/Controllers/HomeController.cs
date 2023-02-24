@@ -256,7 +256,7 @@ namespace PuppySharpPdf.Framework.DemoProject.Controllers
 					MarginOptions = new MarginOptions
 					{
 						Top = "160px",
-						Bottom = "100px",
+						Bottom = "160px",
 						Left = "0px",
 						Right = "0px"
 
