@@ -53,15 +53,15 @@ The following options are available in the RendererOptions class:
 | Timeout | Maximum time in milliseconds to wait for the browser instance to start. Defaults to 30000 (30 seconds). Pass 0 to disable timeout. |
 
 ### Generating a PDF from a URL
-To generate a PDF from a URL you will need to call the *GeneratePdfFromUrl* method on the *GeneratePdfFromUrlAsync* class. The *GeneratePdfFromUrlAsync* method takes two parameters, the first is the URL to generate the PDF from and the second is any PDF configurations using the *PdfOptions* class. The renderer will return a byte array of the PDF.
-From here you can save the PDF to a file or stream it to the browser. Below is an example of rendering a PDF from a URL in an Asp.NET MVC 5 application.
+To generate a PDF from a URL you will need to call the *GeneratePdfFromUrl* method on the *GeneratePdfFromUrlAsync* class. The *GeneratePdfFromUrlAsync* method takes two parameters, the first is the URL to generate the PDF from and the second is any PDF configurations using the *PdfOptions* class. The renderer follows the Result Pattern using the [Ardalis.Result](https://github.com/ardalis/result) nuget package and will return a ***Result<byte[]>***. This pattern allows you to check if
+the PDF was successfully Rendered. To get the byte array value, call the *.Value* property on the returned object. From here you can save the PDF to a file or stream it to the browser. Below is an example of rendering a PDF from a URL in an Asp.NET MVC 5 application.
 
 ```csharp
 var pdfRenderer = new PuppySharpPdfRenderer();
 
 var pdf = await pdfRenderer.GeneratePdfFromUrlAsync("www.google.com");
 
-return File(pdf, "application/pdf", "PdfFromUrl.pdf");
+return File(pdf.Value, "application/pdf", "PdfFromUrl.pdf");
 ```
 
 <br/>
@@ -144,6 +144,7 @@ var html = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "Views/Repor
 
 var pdf = await pdfRenderer.GeneratePdfFromHtmlAsync(html);
 
+return File(pdf.Value, "application/pdf", "PdfFromUrl.pdf");
 ```
 
 #### Razor File
@@ -157,6 +158,7 @@ var html =  ViewRenderer.RenderPartialView("~/Views/Shared/Templates/PdfTempalte
 
 var pdf = await pdfRenderer.GeneratePdfFromHtmlAsync(html);
 
+return File(pdf.Value, "application/pdf", "PdfFromUrl.pdf");
 ```
 <br>
 
