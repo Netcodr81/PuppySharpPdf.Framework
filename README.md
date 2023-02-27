@@ -1,4 +1,4 @@
-# PuppySharpPdf.Framework
+# PuppySharpPdf.Standard
 This is a wrapper for the Puppeteer Sharp package. This package abstracts the complexity of using Puppeteer Sharp making it easier to generate PDFs in a .NET Framework application. With this package you will be able to generate PDF's from a URL, using a Razor (.cshtml) file, or an Html File.
 
 ## License
@@ -7,7 +7,7 @@ MIT
 
 ## Getting Started
 
-You can install the package via NugGet package manager just search for *PuppySharpPdf.Framework*. You can also intall via powershell using the following command.
+You can install the package via NugGet package manager just search for *PuppySharpPdf.Standard*. You can also intall via powershell using the following command.
 <br>
 <br>
 
