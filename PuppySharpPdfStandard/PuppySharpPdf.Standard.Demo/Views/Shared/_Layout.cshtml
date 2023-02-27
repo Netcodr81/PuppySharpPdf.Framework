@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        @Html.ActionLink("Home", "Index", "Home", null, new { @class="navbar-brand" })
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">               
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                        Pdf Generation From Url
+                    </a>
+                    <div class="dropdown-menu">
+                        @Html.ActionLink("Generate PDF Using Url", "GeneratePdfByUrl", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Url with Custom Options", "GeneratePdfByUrlWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
+                    </div>                  
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                        Pdf Generation From Html
+                    </a>
+                    <div class="dropdown-menu">
+                        @Html.ActionLink("Generate PDF Using Razor Template", "GeneratePdfUsingRazorTemplate", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Razor Template & Custom Options", "GeneratePdfUsingRazorTemplateWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html Template", "GeneratePdfUsingHtmlTemplate", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Generate PDF Using Html Template & Custom Options", "GeneratePdfUsingHtmlTemplateWithCustomOptions", "Home", null, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid body-content p-5">
+        @RenderBody()
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
