@@ -12,7 +12,7 @@ You can install the package via NugGet package manager just search for *PuppySha
 <br>
 
 ```powershell
-Install-Package '' -Version 1.0.0
+Install-Package PuppySharpPdf.Standard -Version 1.0.0
 ```
 
 

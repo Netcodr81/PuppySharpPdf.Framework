@@ -6,7 +6,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>PuppySharpPdf.Standard</Title>
 		<Authors>Mike Eckel</Authors>
-		<Description>PuppySharpPDF.Standard is a wrapper for the Puppeteer Sharp package. This package abstracts the complexity of using Puppeteer Sharp making it easier to generate PDFs in a .NET Framework application. With this package you will be able to generate PDF's from a URL, using a Razor (.cshtml) file, or an Html File.</Description>
+		<Description>PuppySharpPDF.Standard is a wrapper for the Puppeteer Sharp package. This package abstracts the complexity of using Puppeteer Sharp making it easier to generate PDFs in a .NET application. This package will work with any .NET application that can use a .NET Standard 2.0 library. With this package you will be able to generate PDF's from a URL, using a Razor (.cshtml) file, or an Html File.</Description>
 		<Copyright>2023</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Netcodr81/PuppySharpPdf.Standard</RepositoryUrl>
